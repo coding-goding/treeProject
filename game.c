@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <Windows.h>
 
-#define VER "1.2"
+#define VER "1.3"
 
 typedef struct all_var {
 	//items
@@ -671,7 +671,7 @@ var read(var a) {
 			}
 			if (p == 4) {
 				int incomeA = 1500 + v.lvD * 5000;
-				int incomeB = 6500 + v.lvD + 5000;
+				int incomeB = 6500 + v.lvD * 5000;
 				if (v.lvB == 0) {
 					incomeA = 0;
 					incomeB = 6500;
@@ -679,7 +679,7 @@ var read(var a) {
 				gotoxy(0, 0);
 				printf("읽을 시 목재 가구를 판매했을 때의 수입이 증가합니다.\n");
 				printf("* 목재 가구 판매가 %d원 > %d원\n", incomeA, incomeB);
-				printf("* 개수 : %d권", v.bC);
+				printf("* 개수 : %d권", v.bD);
 				gotoxy(4, 4);
 				printf("목재 가구 제작서");
 			}
@@ -700,7 +700,7 @@ var read(var a) {
 			if (p == 6) {
 				gotoxy(0, 0);
 				printf("읽을 시 작업의 효율이 증가합니다.\n");
-				printf("* 작업 효율 Lv.%d > Lv.%d\n", v.ef, v.ef + 1);
+				printf("* 작업 효율 +%d > +%d\n", v.ef, v.ef + 1);
 				printf("* 개수 : %d권", v.bEF);
 				gotoxy(4, 4);
 				printf("작업 효율성 이론서");
@@ -769,7 +769,7 @@ var read(var a) {
 			gotoxy(9, 7);
 
 		}
-		printf("<%d", s);
+		printf("<");
 		while (1) {
 			if (_kbhit()) {
 				select = _getch();
@@ -952,7 +952,7 @@ var status(var a) {
 	printf("목재 도구 제작 Lv.%d\n", v.lvC);
 	printf("목재 가구 제작 Lv.%d\n", v.lvD);
 	printf("목재 집 건축 Lv.%d\n", v.lvE);
-	printf("작업 효율 Lv.%d\n\n", v.ef);
+	printf("작업 효율 Lv.%d\n\n", v.ef + a.effectB*2 + a.effectC + a.effectFin*1000);
 
 	printf("나무 성장\n\n");
 	treeName(v.level);
@@ -1037,7 +1037,7 @@ var work(var a) {
 		else {
 			printf("\n                  ");
 		}
-		printf("\n작업 효율성 : Lv.%d", a.ef);
+		printf("\n작업 효율성 : Lv.%d", a.ef + a.effectB*2 + a.effectC + a.effectFin * 1000);
 		printf("\n작업 진행도 : %d/%d\n\n", progress, max_progress);
 
 
@@ -1107,7 +1107,7 @@ var work(var a) {
 				}
 				else if (select == 'f') {
 					if (work == 0) {
-						progress += 1 + a.ef;
+						progress += 1 + a.ef + a.effectB * 2 + a.effectC + a.effectFin * 1000;
 						work = 1;
 						if (progress >= max_progress) {
 							if (s == 1) {
@@ -1132,7 +1132,7 @@ var work(var a) {
 				}
 				else if (select == 'j') {
 					if (work == 1) {
-						progress += 1 + a.ef;
+						progress += 1 + a.ef + a.effectB * 2 + a.effectC + a.effectFin * 1000;
 						work = 0;
 						if (progress >= max_progress) {
 							if (s == 1) {
@@ -1436,7 +1436,7 @@ var shop_books(var a) {
 		}
 		else if (s == 4) {
 			gotoxy(0, 0);
-			int sum = v.lvD + v.bA;
+			int sum = v.lvD + v.bD;
 			printf("목재 가구 제작서(재고:%d)\n목재 가구 제작에 대한 능력을 키웁니다.\n현재 Lv.%d  필요 자금:%d원  필요 조건:목재 도구 제작 Lv.%d", 100 - sum, v.lvD, 250 + sum * 41, 50);
 			gotoxy(17, 7);
 		}
@@ -1757,27 +1757,27 @@ var sell(var a) {
 		}
 		if (s == 1) {
 			gotoxy(0, 0);
-			printf("가공된 목재\n수량 : %d  수입 : %d\na로 1개씩 판매, s로 일괄 판매", v.gA, a.lvA);
+			printf("가공된 목재\n수량 : %d  수입 : %d\na로 1개씩 판매, s로 일괄 판매", v.gA, a.lvA + a.effectD * 1000);
 			gotoxy(17, 4);
 		}
 		else if (s == 2) {
 			gotoxy(0, 0);
-			printf("목재 인형\n수량 : %d  수입 : %d\na로 1개씩 판매, s로 일괄 판매", v.gB, 15 + a.lvB * 20);
+			printf("목재 인형\n수량 : %d  수입 : %d\na로 1개씩 판매, s로 일괄 판매", v.gB, 15 + a.lvB * 20 + a.effectD * 1000);
 			gotoxy(15, 5);
 		}
 		else if (s == 3) {
 			gotoxy(0, 0);
-			printf("목재 도구\n수량 : %d  수입 : %d\na로 1개씩 판매, s로 일괄 판매", v.gC, 200 + a.lvC * 500);
+			printf("목재 도구\n수량 : %d  수입 : %d\na로 1개씩 판매, s로 일괄 판매", v.gC, 200 + a.lvC * 500 + a.effectD * 1000);
 			gotoxy(15, 6);
 		}
 		else if (s == 4) {
 			gotoxy(0, 0);
-			printf("목재 가구\n수량 : %d  수입 : %d\na로 1개씩 판매, s로 일괄 판매", v.gD, 1500 + a.lvD * 5000);
+			printf("목재 가구\n수량 : %d  수입 : %d\na로 1개씩 판매, s로 일괄 판매", v.gD, 1500 + a.lvD * 5000 + a.effectD * 1000);
 			gotoxy(15, 7);
 		}
 		else if (s == 5) {
 			gotoxy(0, 0);
-			printf("목재 집\n수량 : %d  수입 : %d\na로 1채씩 판매, s로 일괄 판매", v.gE, 10000 + a.lvE * 40000);
+			printf("목재 집\n수량 : %d  수입 : %d\na로 1채씩 판매, s로 일괄 판매", v.gE, 10000 + a.lvE * 40000 + a.effectD * 1000);
 			gotoxy(13, 8);
 		}
 		else if (s == 6) {
@@ -1812,7 +1812,7 @@ var sell(var a) {
 						}
 						else {
 							v.gA--;
-							v.money += a.lvA;
+							v.money += a.lvA + a.effectD * 1000;
 						}
 						break;
 
@@ -1823,7 +1823,7 @@ var sell(var a) {
 						}
 						else {
 							v.gB--;
-							v.money += 15 + a.lvB * 20;
+							v.money += 15 + a.lvB * 20 + a.effectD * 1000;
 						}
 						break;
 					}
@@ -1833,7 +1833,7 @@ var sell(var a) {
 						}
 						else {
 							v.gC--;
-							v.money += 200 + a.lvC * 500;
+							v.money += 200 + a.lvC * 500 + a.effectD * 1000;
 						}
 						break;
 
@@ -1844,7 +1844,7 @@ var sell(var a) {
 						}
 						else {
 							v.gD--;
-							v.money += 1500 + a.lvD * 5000;
+							v.money += 1500 + a.lvD * 5000 + a.effectD * 1000;
 						}
 						break;
 
@@ -1855,7 +1855,7 @@ var sell(var a) {
 						}
 						else {
 							v.gE--;
-							v.money += 10000 + a.lvE * 40000;
+							v.money += 10000 + a.lvE * 40000 + a.effectD * 1000;
 						}
 						break;
 
@@ -2042,6 +2042,9 @@ var tree(var a) {
 							if (v.effectA == 1) {
 								v.xp += 20;
 							}
+							if (v.effectC == 1) {
+								v.xp += 20;
+							}
 							v.water--;
 							break;
 						}
@@ -2058,6 +2061,9 @@ var tree(var a) {
 							}
 							v.xp += amount;
 							if (v.effectA == 1) {
+								v.xp += 20;
+							}
+							if (v.effectC == 1) {
 								v.xp += 20;
 							}
 							v.fer--;
@@ -2113,6 +2119,9 @@ var tree(var a) {
 							if (v.effectA == 1) {
 								v.xp += v.water * 20;
 							}
+							if (v.effectC == 1) {
+								v.xp += v.water * 20;
+							}
 							v.water = 0;
 							break;
 						}
@@ -2129,6 +2138,9 @@ var tree(var a) {
 							}
 							v.xp += amount;
 							if (v.effectA == 1) {
+								v.xp += 200;
+							}
+							if (v.effectC == 1) {
 								v.xp += 200;
 							}
 							v.fer -= 10;
@@ -2150,6 +2162,9 @@ var tree(var a) {
 							v.fer -= 100;
 							v.xp += amount;
 							if (v.effectA == 1) {
+								v.xp += 2000;
+							}
+							if (v.effectC == 1) {
 								v.xp += 2000;
 							}
 							break;
@@ -2339,7 +2354,7 @@ var effect(var a) {
 		}
 		if (s == 1) {
 			gotoxy(0, 0);
-			printf("나무가 성장할 때 10만큼 추가 성장을 합니다.(영양제와 생명과학 이론의 영향을 받지 않습니다.)\n나무 성장치 Lv.20에서 해금");
+			printf("나무가 성장할 때 20만큼 추가 성장을 합니다.(영양제와 생명과학 이론의 영향을 받지 않습니다.)\n나무 성장치 Lv.20에서 해금");
 			gotoxy(22, 4);
 		}
 		else if (s == 2) {
@@ -2347,38 +2362,38 @@ var effect(var a) {
 			if (v.level >= 40) {
 				printf("작업 효율이 2 증가합니다.\n나무 성장치 Lv.40에서 해금");
 			}
-			
+
 			gotoxy(22, 5);
 		}
 		else if (s == 3) {
 			gotoxy(0, 0);
 			if (v.level >= 60) {
-				printf("나무가 성장할 때 20만큼 추가 성장을 합니다. 또한 작업 효율이 1 증가합니다.\n나무 성장치 Lv.60에서 해금");
+				printf("나무가 성장할 때 20만큼 추가 성장을 합니다.(영양제와 생명과학 이론의 영향을 받지 않습니다.) 또한 작업 효율이 1 증가합니다.\n나무 성장치 Lv.60에서 해금");
 			}
-			
+
 			gotoxy(24, 6);
 		}
 		else if (s == 4) {
 			gotoxy(0, 0);
 			if (v.level >= 80) {
-				printf("나무 제품 판매 시 1000원을 추가로 얻습니다.\n나무 성장치 Lv.80에서 해금");
+				printf("나무 제품 판매 시 개당 1000원을 추가로 얻습니다.\n나무 성장치 Lv.80에서 해금");
 			}
-			
+
 			gotoxy(24, 7);
 		}
 		else if (s == 5) {
 			gotoxy(0, 0);
 			if (v.level >= 100) {
-				printf("작업 효율이 10000 증가합니다.\n나무 성장치 Lv.100에서 해금");
+				printf("작업 효율이 1000 증가합니다.\n나무 성장치 Lv.100에서 해금");
 			}
-			
+
 			gotoxy(20, 8);
 		}
 		else if (s == 6) {
 			gotoxy(7, 9);
 
 		}
-		printf("<%d", s);
+		printf("<");
 
 		while (1) {
 			if (_kbhit()) {
@@ -2457,8 +2472,8 @@ var effect(var a) {
 					error = 1;
 					break;
 				}
-				
-				
+
+
 
 				else if (select < 0 || select > 126) {
 					error = 2;
@@ -2469,9 +2484,6 @@ var effect(var a) {
 	}
 }
 
-void printMap(int place) {
-
-}// 뒷마당, 집, 작업소, 잡화점, 서점, 거래상
 void ending() {
 	char y;
 	system("cls");
