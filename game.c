@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <Windows.h>
 
-#define VER "1.0"
+#define VER "1.2"
 
 typedef struct all_var {
 	//items
@@ -46,6 +46,14 @@ typedef struct all_var {
 	int level;
 	int readed;
 	int druged;
+	//treeEffect
+	int effectA;
+	int effectB;
+	int effectC;
+	int effectD;
+	int effectFin;
+
+	int clear;
 }var;
 
 void intro();
@@ -53,16 +61,19 @@ void story();
 void story2();
 void story3(int num);
 void gotoxy(int x, int y);
-int start_select(int money, int cleared);
+int start_select(int num, int cleared);
+var towm(var a);
 var rest(var a);
 var read(var a);
 var status(var a);
+var storage(var a);
 var work(var a);
 var shop_items(var a);
 var shop_books(var a);
 var sell(var a);
 var tree(var a);
 void treeName(int lv);
+var effect(var a);
 void printMap(int place);
 void ending();
 void ending2();
@@ -105,70 +116,24 @@ int main() {
 	v.level = 0;
 	v.readed = 0;
 	v.druged = 0;
+	v.effectA = 0;
+	v.effectB = 0;
+	v.effectC = 0;
+	v.effectD = 0;
+	v.effectFin = 0;
+	v.clear = 0;
 
 	int place = 1;
 
 	int cleared = 0;
 
+
 	intro();
 	story();
 	while (1) {
-		int a = start_select(v.money, cleared);
-		if (a == 1) {
-			var tmp = tree(v);
-			v.level = tmp.level;
-			v.xp = tmp.xp;
-			v.fer = tmp.fer;
-			v.water = tmp.water;
-			v.drug = tmp.drug;
-			v.druged = tmp.druged;
-			if (v.level == 101) {
-				cleared = 1;
-			}
-
-			tmp = rest(v);
-		}
-		else if (a == 2) {//돈
-			var tmp = work(v);
-			v.gA = tmp.gA;
-			v.gB = tmp.gB;
-			v.gC = tmp.gC;
-			v.gD = tmp.gD;
-			v.gE = tmp.gE;
-			//money = working(money, work_wood_Lv, work_doll_Lv, work_tool_Lv, work_furn_Lv, work_house_Lv, work_efficiency);
-		}
-		else if (a == 3) {//상점
-			var tmp = shop_items(v);
-			v.money = tmp.money;
-			v.fer = tmp.fer;
-			v.water = tmp.water;
-			v.max_water = tmp.max_water;
-			v.drug = tmp.drug;
-
-			tmp = shop_books(v);
-			v.money = tmp.money;
-			v.bA = tmp.bA;
-			v.bB = tmp.bB;
-			v.bC = tmp.bC;
-			v.bD = tmp.bD;
-			v.bE = tmp.bE;
-			v.bT = tmp.bT;
-			v.bEF = tmp.bEF;
-			v.sA = tmp.sA;
-			v.sB = tmp.sB;
-			v.sC = tmp.sC;
-			v.sD = tmp.sD;
-			v.sE = tmp.sE;
-
-			tmp = sell(v);
-			v.money = tmp.money;
-			v.gA = tmp.gA;
-			v.gB = tmp.gB;
-			v.gC = tmp.gC;
-			v.gD = tmp.gD;
-			v.gE = tmp.gE;
-		}
-		else if (a == 4) {
+		int a = start_select(place, cleared);
+		place = a / 10;
+		if (a % 10 == 3) {
 			system("cls");
 			printf("정말 종료하시겠습니까?\n이 버전은 저장과 불러오기를 지원하지 않습니다.\n\n");
 			printf("y를 눌러주세요>");
@@ -176,8 +141,91 @@ int main() {
 			if (q == 'y') {
 				break;
 			}
-			
 		}
+		else if (a % 10 == 2) {
+
+		}
+		else {
+			a /= 10;
+			if (a == 1) {
+				var tmp = tree(v);
+				v.level = tmp.level;
+				v.xp = tmp.xp;
+				v.fer = tmp.fer;
+				v.water = tmp.water;
+				v.drug = tmp.drug;
+				v.druged = tmp.druged;
+				if (v.level == 101) {
+					cleared = 1;
+				}
+				v.effectA = tmp.effectA;
+				v.effectB = tmp.effectB;
+				v.effectC = tmp.effectC;
+				v.effectD = tmp.effectD;
+				v.effectFin = tmp.effectFin;
+			}
+			else if (a == 2) {
+				var tmp = rest(v);
+				v.bA = tmp.bA;
+				v.bB = tmp.bB;
+				v.bC = tmp.bC;
+				v.bD = tmp.bD;
+				v.bE = tmp.bE;
+				v.bEF = tmp.bEF;
+				v.bT = tmp.bT;
+				v.lvA = tmp.lvA;
+				v.lvB = tmp.lvB;
+				v.lvC = tmp.lvC;
+				v.lvD = tmp.lvD;
+				v.lvE = tmp.lvE;
+				v.ef = tmp.ef;
+				v.readed = tmp.readed;
+			}
+			else if (a == 3) {//돈
+				var tmp = work(v);
+				v.gA = tmp.gA;
+				v.gB = tmp.gB;
+				v.gC = tmp.gC;
+				v.gD = tmp.gD;
+				v.gE = tmp.gE;
+				//money = working(money, work_wood_Lv, work_doll_Lv, work_tool_Lv, work_furn_Lv, work_house_Lv, work_efficiency);
+			}
+			else if (a == 4) {//상점
+				var tmp = shop_items(v);
+				v.money = tmp.money;
+				v.fer = tmp.fer;
+				v.water = tmp.water;
+				v.max_water = tmp.max_water;
+				v.drug = tmp.drug;
+
+			}
+			else if (a == 5) {
+				var tmp = shop_books(v);
+				v.money = tmp.money;
+				v.bA = tmp.bA;
+				v.bB = tmp.bB;
+				v.bC = tmp.bC;
+				v.bD = tmp.bD;
+				v.bE = tmp.bE;
+				v.bT = tmp.bT;
+				v.bEF = tmp.bEF;
+				v.sA = tmp.sA;
+				v.sB = tmp.sB;
+				v.sC = tmp.sC;
+				v.sD = tmp.sD;
+				v.sE = tmp.sE;
+			}
+			else {
+				var tmp = sell(v);
+				v.money = tmp.money;
+				v.gA = tmp.gA;
+				v.gB = tmp.gB;
+				v.gC = tmp.gC;
+				v.gD = tmp.gD;
+				v.gE = tmp.gE;
+			}
+		}
+
 	}
 
 
@@ -262,14 +310,14 @@ void story() {
 void story2() {
 	char y = NULL;
 	int max_pharase = 10;
-	for (int i = 1; i < max_pharase+1; i++) {
-		
-			system("cls");
-			story3(i);
-			y = _getch();
-		
+	for (int i = 1; i < max_pharase + 1; i++) {
+
+		system("cls");
+		story3(i);
+		y = _getch();
+
 	}
-	
+
 }
 void story3(int num) {
 	if (num > 0) {
@@ -311,63 +359,95 @@ void gotoxy(int x, int y) { //커서 이동
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
-int start_select(int money, int cleared) {  //메인 인터페이스
+int start_select(int num, int cleared) {  //메인 인터페이스
 	int s = 1;
+	int v = num;
 	int error = 0;
 	char select = NULL;
 	while (1) {
 		system("cls");
-		printf("나무 키워주기\n작업\n상점\n종료");
-		printf("\n\n현재 돈 : %d원", money);
+		printf("\n\n\n\n");
+		printf("들어가기\n\n종료");
+
+		gotoxy(0, 0);
+		printf("뒷마당  집  작업소  잡화점  서점  판매점");
+		if (v == 1) {
+			gotoxy(2, 1);
+		}
+		else if (v == 2) {
+			gotoxy(8, 1);
+		}
+		else if (v == 3) {
+			gotoxy(14, 1);
+		}
+		else if (v == 4) {
+			gotoxy(22, 1);
+		}
+		else if (v == 5) {
+			gotoxy(29, 1);
+		}
+		else if (v == 6) {
+			gotoxy(36, 1);
+		}
+		printf("@");
 		if (cleared == 1) {
-			gotoxy(0, 8);
+			gotoxy(0, 10);
 			printf("클리어를 축하합니다!");
 		}
 		if (error == 1) { //Caps Lock 활성화
-			gotoxy(0, 6);
+			gotoxy(0, 12);
 			printf("Caps Lock을 풀어주세요.");
 			error = 0;
 		}
 		else if (error == 2) { //한/영키 전환
-			gotoxy(0, 6);
+			gotoxy(0, 12);
 			printf("한/영키를 바꿔주세요.");
 			error = 0;
 		}
 		if (s == 1) {
-			gotoxy(14, 0);
+			gotoxy(10, 4);
 		}
 		else if (s == 2) {
-			gotoxy(5, 1);
+			gotoxy(5, 5);
 		}
 		else if (s == 3) {
-			gotoxy(5, 2);
-		}
-		else if (s == 4) {
-			gotoxy(5, 3);
+			gotoxy(5, 6);
 		}
 		printf("<");
-	
+
 		while (1) {
 			if (_kbhit()) {
 				select = _getch();
 				if (select == -32) {
 					select = _getch();
 					switch (select) {
+					case 75:
+						if (v != 1) {
+							v--;
+						}
+						break;
+					case 77:
+						if (v != 6) {
+							v++;
+
+						}
+						break;
 					case 72:
 						if (s != 1) {
 							s--;
-							break;
 						}
+						break;
+
 					case 80:
-						if (s != 4) {
+						if (s != 3) {
 							s++;
-							break;
 						}
+						break;
 					}
 					break;
 				}
 				else if (select == 'a') {
-					return s;
+					return s + 10 * v;
 				}
 				else if (select == 'A') {
 					error = 1;
@@ -439,18 +519,33 @@ var rest(var a) {
 				}
 				else if (select == 'a') {
 					if (s == 1) {
+						var tmp = read(v);
+						v.bA = tmp.bA;
+						v.bB = tmp.bB;
+						v.bC = tmp.bC;
+						v.bD = tmp.bD;
+						v.bE = tmp.bE;
+						v.bEF = tmp.bEF;
+						v.bT = tmp.bT;
+						v.lvA = tmp.lvA;
+						v.lvB = tmp.lvB;
+						v.lvC = tmp.lvC;
+						v.lvD = tmp.lvD;
+						v.lvE = tmp.lvE;
+						v.ef = tmp.ef;
+						v.readed = tmp.readed;
 
 					}
 					else if (s == 2) {
-
+						var tmp = status(v);
 					}
 					else if (s == 3) {
-
+						var tmp = storage(v);
 					}
 					else if (s == 4) {
 						return v;
 					}
-
+					break;
 				}
 				else if (select == 'A') {
 					error = 1;
@@ -470,37 +565,211 @@ var read(var a) {
 	v = a;
 	int s = 1;
 	int error = 0;
+	int p = 0; // bA / bB / bC / bD / bE / bEF / bT / sA / sB / sC / sD / sE
 
 	char select = NULL;
+
+	int b[12] = { 0, };
+	if (v.bA > 0) {
+		b[0] = 1;
+	}
+	if (v.bB > 0) {
+		b[1] = 1;
+	}
+	if (v.bC > 0) {
+		b[2] = 1;
+	}
+	if (v.bD > 0) {
+		b[3] = 1;
+	}
+	if (v.bE > 0) {
+		b[4] = 1;
+	}
+	if (v.bEF > 0) {
+		b[5] = 1;
+	}
+	if (v.bT > 0) {
+		b[6] = 1;
+	}
+	if (v.sA > 0) {
+		b[7] = 1;
+	}
+	if (v.sB > 0) {
+		b[8] = 1;
+	}
+	if (v.sC > 0) {
+		b[9] = 1;
+	}
+	if (v.sD > 0) {
+		b[10] = 1;
+	}
+	if (v.sE > 0) {
+		b[11] = 1;
+	}
+	for (int i = 0; i < 12; i++) {
+		if (b[i] == 1) {
+			p = i + 1;
+			i = 13;
+		}
+	}
+
 	while (1) {
 		system("cls");
-		printf("독서\n스테이터스\n창고\n나가기");
+		int o = 0;
+		printf("\n\n\n\n");
+		if (p == 0) {
+			printf("책이 없습니다. 서점에서 책을 구매해 보세요.");
+		}
+		else {
+			for (int i = p - 1; i > 0; i--) {
+				if (b[i - 1] == 1) {
+					o = 1;
+				}
+			}
+			if (o == 1) {
+				printf(" <  ");
+			}
+			else {
+				printf("    ");
+			}
+
+			if (p == 1) {
+				gotoxy(0, 0);
+				printf("읽을 시 가공된 목재를 판매했을 때의 수입이 증가합니다.\n");
+				printf("* 가공된 목재 판매가 %d원 > %d원\n", v.lvA, v.lvA + 1);
+				printf("* 개수 : %d권", v.bA);
+				gotoxy(4, 4);
+				printf("목재 가공 이론서");
+			}
+			if (p == 2) {
+				int incomeA = 15 + v.lvB * 20;
+				int incomeB = 35 + v.lvB * 20;
+				if (v.lvB == 0) {
+					incomeA = 0;
+					incomeB = 35;
+				}
+				gotoxy(0, 0);
+				printf("읽을 시 목재 인형을 판매했을 때의 수입이 증가합니다.\n");
+				printf("* 목재 인형 판매가 %d원 > %d원\n", incomeA, incomeB);
+				printf("* 개수 : %d권", v.bB);
+				gotoxy(4, 4);
+				printf("목재 인형 제작서");
+			}
+			if (p == 3) {
+				int incomeA = 200 + v.lvC * 500;
+				int incomeB = 700 + v.lvC * 500;
+				if (v.lvB == 0) {
+					incomeA = 0;
+					incomeB = 700;
+				}
+				gotoxy(0, 0);
+				printf("읽을 시 목재 도구를 판매했을 때의 수입이 증가합니다.\n");
+				printf("* 목재 도구 판매가 %d원 > %d원\n", incomeA, incomeB);
+				printf("* 개수 : %d권", v.bC);
+				gotoxy(4, 4);
+				printf("목재 도구 제작서");
+			}
+			if (p == 4) {
+				int incomeA = 1500 + v.lvD * 5000;
+				int incomeB = 6500 + v.lvD + 5000;
+				if (v.lvB == 0) {
+					incomeA = 0;
+					incomeB = 6500;
+				}
+				gotoxy(0, 0);
+				printf("읽을 시 목재 가구를 판매했을 때의 수입이 증가합니다.\n");
+				printf("* 목재 가구 판매가 %d원 > %d원\n", incomeA, incomeB);
+				printf("* 개수 : %d권", v.bC);
+				gotoxy(4, 4);
+				printf("목재 가구 제작서");
+			}
+			if (p == 5) {
+				int incomeA = 10000 + v.lvE * 40000;
+				int incomeB = 50000 + v.lvE * 40000;
+				if (v.lvB == 0) {
+					incomeA = 0;
+					incomeB = 60000;
+				}
+				gotoxy(0, 0);
+				printf("읽을 시 목재 집을 판매했을 때의 수입이 증가합니다.\n");
+				printf("* 목재 집 판매가 %d원 > %d원\n", incomeA, incomeB);
+				printf("* 개수 : %d권", v.bE);
+				gotoxy(4, 4);
+				printf("목재 집 건축 이론서");
+			}
+			if (p == 6) {
+				gotoxy(0, 0);
+				printf("읽을 시 작업의 효율이 증가합니다.\n");
+				printf("* 작업 효율 Lv.%d > Lv.%d\n", v.ef, v.ef + 1);
+				printf("* 개수 : %d권", v.bEF);
+				gotoxy(4, 4);
+				printf("작업 효율성 이론서");
+			}
+			if (p == 7) {
+				gotoxy(0, 0);
+				printf("읽을 시 나무의 성장의 효율이 증가합니다.\n");
+				printf("* 성장 효율 : x1.5\n");
+				printf("* 개수 : %d권", v.bT);
+				gotoxy(4, 4);
+				printf("생명과학 이론서");
+			}
+			if (p >= 8) {
+				gotoxy(0, 0);
+				printf("별로 재미있을 것 같진 않은 역사책입니다.\n");
+				int series = 0;
+				if (p == 8) {
+					series = 1;
+				}
+				if (p == 9) {
+					series = 2;
+				}
+				if (p == 10) {
+					series = 3;
+				}
+				if (p == 11) {
+					series = 4;
+				}
+				else {
+					series = 5;
+				}
+				printf("* 개수 : %d권", 1);
+				gotoxy(4, 4);
+				printf("잃어버리지 않은 역사 - %d권", p - 7);
+			}
+
+			o = 0;
+			for (int i = p + 1; i < 13; i++) {
+				if (b[i - 1] == 1) {
+					o = 1;
+				}
+			}
+			if (o == 1) {
+				printf("  > ");
+			}
+			else {
+				printf("    ");
+			}
+		}
+		printf("\n\n읽기\n뒤로가기");
 		if (error == 1) { //Caps Lock 활성화
-			gotoxy(0, 13);
+			gotoxy(0, 20);
 			printf("Caps Lock을 풀어주세요.");
 			error = 0;
 		}
 		else if (error == 2) { //한/영키 전환
-			gotoxy(0, 13);
+			gotoxy(0, 20);
 			printf("한/영키를 바꿔주세요.");
 			error = 0;
 		}
 		if (s == 1) {
-			gotoxy(5, 0);
+			gotoxy(5, 6);
 
 		}
 		else if (s == 2) {
-			gotoxy(11, 1);
+			gotoxy(9, 7);
 
 		}
-		else if (s == 3) {
-			gotoxy(5, 2);
-
-		}
-		else if (s == 4) {
-			gotoxy(7, 3);
-		}
-		printf("<");
+		printf("<%d", s);
 		while (1) {
 			if (_kbhit()) {
 				select = _getch();
@@ -513,24 +782,148 @@ var read(var a) {
 						}
 						break;
 					case 80:
-						if (s != 4) {
+						if (s != 2) {
 							s++;
 						}
 						break;
+					case 75:
+						o = 0;
+						for (int i = p - 1; i > 0; i--) {
+							if (b[i - 1] == 1) {
+								o = i;
+								i = 0;
+							}
+						}
+						if (o != 0) {
+							p = o;
+						}
+						break;
+					case 77:
+						o = 0;
+						for (int i = p + 1; i < 13; i++) {
+							if (b[i - 1] == 1) {
+								o = i;
+								i = 13;
+							}
+						}
+						if (o != 0) {
+							p = o;
+						}
+						break;
 					}
+
 					break;
 				}
 				else if (select == 'a') {
 					if (s == 1) {
+						int isEmpty = 0;
+						if (p == 1) {
+							v.lvA++;
+							v.bA--;
+							if (v.bA == 0) {
+								isEmpty = 1;
+							}
+						}
+						else if (p == 2) {
+							v.lvB++;
+							v.bB--;
+							if (v.bB == 0) {
+								isEmpty = 1;
+							}
+						}
+						else if (p == 3) {
+							v.lvC++;
+							v.bC--;
+							if (v.bC == 0) {
+								isEmpty = 1;
+							}
+						}
+						else if (p == 4) {
+							v.lvD++;
+							v.bD--;
+							if (v.bD == 0) {
+								isEmpty = 1;
+							}
+						}
+						else if (p == 5) {
+							v.lvE++;
+							v.bE--;
+							if (v.bE == 0) {
+								isEmpty = 1;
+							}
+						}
+						else if (p == 6) {
+							v.ef++;
+							v.bEF--;
+							if (v.bEF == 0) {
+								isEmpty = 1;
+							}
+						}
+						else if (p == 7) {
+							v.readed = 1;
+							v.bT--;
+							if (v.bT == 0) {
+								isEmpty = 1;
+							}
+						}
+						else if (p == 8) {
+							if (v.sA == 0) {
+								isEmpty = 1;
+							}
+						}
+						else if (p == 9) {
+							if (v.sB == 0) {
+								isEmpty = 1;
+							}
+						}
+						else if (p == 10) {
+							if (v.sC == 0) {
+								isEmpty = 1;
+							}
+						}
+						else if (p == 11) {
+							if (v.sD == 0) {
+								isEmpty = 1;
+							}
+						}
+						else if (p == 12) {
+							if (v.sE == 0) {
+								isEmpty = 1;
+							}
+						}
+						if (isEmpty == 1) {
+							isEmpty = 0;
+							b[p - 1] = 0;
+							o = 0;
+							for (int i = p + 1; i < 13; i++) {
+								if (b[i - 1] == 1) {
+									o = i;
+									i = 13;
+								}
+							}
+							if (o >= 1) {
+								p = o;
+							}
+							else {
+								for (int i = p - 1; i > 0; i--) {
+									if (b[i - 1] == 1) {
+										o = i;
+										i = 0;
+									}
+								}
+								if (o >= 1) {
+									p = o;
+								}
+								else {
+									p = 0;
+								}
+							}
 
+
+						}
+						break;
 					}
 					else if (s == 2) {
-
-					}
-					else if (s == 3) {
-
-					}
-					else if (s == 4) {
 						return v;
 					}
 
@@ -546,6 +939,61 @@ var read(var a) {
 			}
 		}
 	}
+}
+
+var status(var a) {
+	var v;
+	v = a;
+	system("cls");
+
+	printf("작업 능력\n\n");
+	printf("목재 가공 Lv.%d\n", v.lvA);
+	printf("목재 인형 제작 Lv.%d\n", v.lvB);
+	printf("목재 도구 제작 Lv.%d\n", v.lvC);
+	printf("목재 가구 제작 Lv.%d\n", v.lvD);
+	printf("목재 집 건축 Lv.%d\n", v.lvE);
+	printf("작업 효율 Lv.%d\n\n", v.ef);
+
+	printf("나무 성장\n\n");
+	treeName(v.level);
+	printf("Lv.%d\n", v.level);
+	printf("%d / %d\n", v.xp, v.max_xp);
+	printf("주입된 영양제 : %d개\n", v.druged);
+	printf("생명공학 : ");
+	if (v.readed == 1) {
+		printf("학습됨\n최종 성장 효율 : x%g\n", (double)(v.druged + 1) * 1.5);
+	}
+	else {
+		printf("학습되지 않음\n최종 성장 효율 : x%g\n", (double)(v.druged + 1));
+	}
+	printf("\n아무 키나 눌러 뒤로가기");
+	char c = NULL;
+	c = _getch();
+	return v;
+}
+
+var storage(var a) {
+	var v;
+	v = a;
+	system("cls");
+
+	printf("작업물\n\n");
+	printf("가공된 목재 : %d개\n", v.gA);
+	printf("목재 인형 : % d개\n", v.gB);
+	printf("목재 도구 : % d개\n", v.gC);
+	printf("목재 가구 : % d개\n", v.gD);
+	printf("목재 집 : % d채\n\n", v.gE);
+
+	printf("나무 성장품\n\n");
+	printf("비료 : %d개\n", v.fer);
+	printf("물 : %d / %d\n", v.water, v.max_water);
+	printf("영양제 : %d개\n\n", v.drug);
+
+	printf("자금 : %d원\n", v.money);
+	printf("\n아무 키나 눌러 뒤로가기");
+	char c = NULL;
+	c = _getch();
+	return v;
 }
 
 var work(var a) {
@@ -814,8 +1262,8 @@ var shop_items(var a) {
 		else if (s == 4) {
 			gotoxy(0, 0);
 			int sum = a.druged + v.drug;
-			printf("영양제(%d개)\n나무의 성장도 효율을 높입니다.\n성장도 효율 증가 : x(주입된 영양제)  필요 자금:%d원", v.drug,  sum * sum * 5000 + 5000);
-			
+			printf("영양제(%d개)\n나무의 성장도 효율을 높입니다.\n성장도 효율 증가 : x(주입된 영양제)  필요 자금:%d원", v.drug, sum * sum * 5000 + 5000);
+
 			gotoxy(7, 7);
 		}
 		else if (s == 5) {
@@ -853,7 +1301,7 @@ var shop_items(var a) {
 							v.fer++;
 						}
 						break;
-						
+
 					}
 					else if (s == 2) {
 						v.water = v.max_water;
@@ -895,7 +1343,7 @@ var shop_items(var a) {
 					if (s == 1) {
 						v.fer += v.money / 50;
 						v.money = v.money % 50;
-					
+
 					}
 					break;
 
@@ -940,7 +1388,7 @@ var shop_books(var a) {
 	while (1) {
 		system("cls");
 		printf("\n\n\n\n");
-		printf("목재 가공 이론서\n목재 인형 제작서\n목재 도구 제작서\n목재 가구 제작서\n목재 집 건축 이론서\n작업 효율성 이론서\n생명과학 이론서\n잃어버리지 않은 역사 - 1권\n잃어버리지 않은 역사 - 2권\n잃어버리지 않은 역사 - 3권\n잃어버리지 않은 역사 - 4권\n나가기");
+		printf("목재 가공 이론서\n목재 인형 제작서\n목재 도구 제작서\n목재 가구 제작서\n목재 집 건축 이론서\n작업 효율성 이론서\n생명과학 이론서\n잃어버리지 않은 역사 - 1권\n잃어버리지 않은 역사 - 2권\n잃어버리지 않은 역사 - 3권\n잃어버리지 않은 역사 - 4권\n잃어버리지 않은 역사 - 5권\n나가기");
 		printf("\n\n\n현재 돈 : %d원", v.money);
 		if (error == 1) { //Caps Lock 활성화
 			gotoxy(0, 20);
@@ -1030,7 +1478,12 @@ var shop_books(var a) {
 			gotoxy(27, 14);
 		}
 		else if (s == 12) {
-			gotoxy(7, 15);
+			gotoxy(0, 0);
+			printf("잃어버리지 않은 역사 - 5권(재고:%d)\n구석에 박혀있던 역사책입니다. 별로 재미있을 것 같지는 않네요.\n필요 자금:5000원", 1 - v.sE);
+			gotoxy(27, 15);
+		}
+		else if (s == 13) {
+			gotoxy(7, 16);
 		}
 		printf("<");
 
@@ -1047,7 +1500,7 @@ var shop_books(var a) {
 						}
 						break;
 					case 80:
-						if (s != 12) {
+						if (s != 13) {
 							s++;
 
 						}
@@ -1238,6 +1691,21 @@ var shop_books(var a) {
 						}
 					}
 					else if (s == 12) {
+						if (v.money < 5000) {
+							error = 3;
+							break;
+						}
+						else if (v.sE == 1) {
+							error = 4;
+							break;
+						}
+						else {
+							v.money -= 5000;
+							v.sE++;
+							break;
+						}
+					}
+					else if (s == 13) {
 						return v;
 					}
 
@@ -1314,7 +1782,7 @@ var sell(var a) {
 		}
 		else if (s == 6) {
 			gotoxy(7, 9);
-			
+
 		}
 		printf("<");
 
@@ -1405,7 +1873,7 @@ var sell(var a) {
 						v.money += v.gA * (a.lvA);
 						v.gA = 0;
 					}
-					else if(s == 2) {
+					else if (s == 2) {
 						v.money += v.gB * (15 + a.lvB * 20);
 						v.gB = 0;
 					}
@@ -1445,6 +1913,11 @@ var tree(var a) {
 	v.level = a.level;
 	v.readed = a.readed;
 	v.druged = a.druged;
+	v.effectA = a.effectA;
+	v.effectB = a.effectB;
+	v.effectC = a.effectC;
+	v.effectD = a.effectD;
+	v.effectFin = a.effectFin;
 
 	int s = 1;
 	int error = 0;
@@ -1459,17 +1932,17 @@ var tree(var a) {
 		}
 		printf("%d단계 성장\n성장도 %d/%d\n성장 효율:(영양제:%d, 생명과학:", v.level, v.xp, v.max_xp, v.druged);
 		if (v.readed == 1) {
-			printf("학습됨) x%g\n\n\n", (double)(v.druged+1) * 1.5);
+			printf("학습됨) x%g\n\n\n", (double)(v.druged + 1) * 1.5);
 		}
 		else {
 			printf("학습되지 않음) x%d\n\n\n", v.druged + 1);
 		}
 		printf("물 주기\n비료 주기\n영양제 주입\n");
 		if (v.level < 20) {
-			printf("???????????\n");
+			printf("?????????\n");
 		}
 		else {
-			printf("오오라 관리\n");
+			printf("축복 관리\n");
 		}
 		printf("나가기");
 		if (error == 1) { //Caps Lock 활성화
@@ -1566,6 +2039,9 @@ var tree(var a) {
 								amount *= 1.5;
 							}
 							v.xp += amount;
+							if (v.effectA == 1) {
+								v.xp += 20;
+							}
 							v.water--;
 							break;
 						}
@@ -1581,10 +2057,13 @@ var tree(var a) {
 								amount *= 1.5;
 							}
 							v.xp += amount;
+							if (v.effectA == 1) {
+								v.xp += 20;
+							}
 							v.fer--;
 							break;
 						}
-			    	}
+					}
 					else if (s == 3) {
 						if (v.drug == 0) {
 							error = 5;
@@ -1602,7 +2081,13 @@ var tree(var a) {
 							break;
 						}
 						else {
-							//준비중
+							var tmp = effect(v);
+							v.effectA = tmp.effectA;
+							v.effectB = tmp.effectB;
+							v.effectC = tmp.effectC;
+							v.effectD = tmp.effectD;
+							v.effectFin = tmp.effectFin;
+							break;
 						}
 					}
 					else if (s == 5) {
@@ -1625,6 +2110,9 @@ var tree(var a) {
 								amount *= 1.5;
 							}
 							v.xp += amount;
+							if (v.effectA == 1) {
+								v.xp += v.water * 20;
+							}
 							v.water = 0;
 							break;
 						}
@@ -1633,13 +2121,16 @@ var tree(var a) {
 						if (v.fer < 10) {
 							error = 3;
 							break;
- 						}
+						}
 						else {
 							int amount = 700 * (v.druged + 1);
 							if (a.readed == 1) {
 								amount *= 1.5;
 							}
 							v.xp += amount;
+							if (v.effectA == 1) {
+								v.xp += 200;
+							}
 							v.fer -= 10;
 							break;
 						}
@@ -1658,6 +2149,9 @@ var tree(var a) {
 							}
 							v.fer -= 100;
 							v.xp += amount;
+							if (v.effectA == 1) {
+								v.xp += 2000;
+							}
 							break;
 						}
 					}
@@ -1737,7 +2231,7 @@ void treeName(int lv) {
 	else if (lv < 99) {
 		printf("대기권에 도달한 세계수");
 	}
-	else if(lv < 100) {
+	else if (lv < 100) {
 		printf("하늘을 뚫기 직전의 세계수");
 	}
 	else {
@@ -1745,6 +2239,236 @@ void treeName(int lv) {
 	}
 	printf("\n");
 }
+
+var effect(var a) {
+	var v;
+	v.level = a.level;
+	v.effectA = a.effectA;
+	v.effectB = a.effectB;
+	v.effectC = a.effectC;
+	v.effectD = a.effectD;
+	v.effectFin = a.effectFin;
+
+	int s = 1;
+	int error = 0;
+	char select = NULL;
+
+	while (1) {
+		system("cls");
+		printf("\n\n\n\n");
+		if (v.level >= 20) {
+			printf("나무의 축복  ");
+			if (v.effectA == 1) {
+				printf("활성화");
+			}
+			else {
+				printf("비활성화");
+			}
+			printf("\n");
+		}
+		if (v.level >= 40) {
+			printf("결실의 기쁨  ");
+			if (v.effectB == 1) {
+				printf("활성화");
+			}
+			else {
+				printf("비활성화");
+			}
+			printf("\n");
+		}
+		else {
+			printf("??????????\n");
+		}
+		if (v.level >= 60) {
+			printf("나무의 축복 2  ");
+			if (v.effectC == 1) {
+				printf("활성화");
+			}
+			else {
+				printf("비활성화");
+			}
+			printf("\n");
+		}
+		else {
+			printf("????????????\n");
+		}
+		if (v.level >= 80) {
+			printf("세계수의 가호  ");
+			if (v.effectD == 1) {
+				printf("활성화");
+			}
+			else {
+				printf("비활성화");
+			}
+			printf("\n");
+		}
+		else {
+			printf("?????????????\n");
+		}
+		if (v.level >= 100) {
+			printf("초월한 힘  ");
+			if (v.effectFin == 1) {
+				printf("활성화");
+			}
+			else {
+				printf("비활성화");
+			}
+			printf("\n");
+		}
+		else {
+			printf("???????\n");
+		}
+		printf("나가기");
+		if (error == 1) { //Caps Lock 활성화
+			gotoxy(0, 18);
+			printf("Caps Lock을 풀어주세요.");
+			error = 0;
+		}
+		else if (error == 2) { //한/영키 전환
+			gotoxy(0, 18);
+			printf("한/영키를 바꿔주세요.");
+			error = 0;
+		}
+		else if (error == 3) {
+			gotoxy(0, 18);
+			printf("나무가 아직 충분히 성장하지 않았습니다.");
+			error = 0;
+		}
+		else if (error == 4) {
+			return v;
+		}
+		if (s == 1) {
+			gotoxy(0, 0);
+			printf("나무가 성장할 때 10만큼 추가 성장을 합니다.(영양제와 생명과학 이론의 영향을 받지 않습니다.)\n나무 성장치 Lv.20에서 해금");
+			gotoxy(22, 4);
+		}
+		else if (s == 2) {
+			gotoxy(0, 0);
+			if (v.level >= 40) {
+				printf("작업 효율이 2 증가합니다.\n나무 성장치 Lv.40에서 해금");
+			}
+			
+			gotoxy(22, 5);
+		}
+		else if (s == 3) {
+			gotoxy(0, 0);
+			if (v.level >= 60) {
+				printf("나무가 성장할 때 20만큼 추가 성장을 합니다. 또한 작업 효율이 1 증가합니다.\n나무 성장치 Lv.60에서 해금");
+			}
+			
+			gotoxy(24, 6);
+		}
+		else if (s == 4) {
+			gotoxy(0, 0);
+			if (v.level >= 80) {
+				printf("나무 제품 판매 시 1000원을 추가로 얻습니다.\n나무 성장치 Lv.80에서 해금");
+			}
+			
+			gotoxy(24, 7);
+		}
+		else if (s == 5) {
+			gotoxy(0, 0);
+			if (v.level >= 100) {
+				printf("작업 효율이 10000 증가합니다.\n나무 성장치 Lv.100에서 해금");
+			}
+			
+			gotoxy(20, 8);
+		}
+		else if (s == 6) {
+			gotoxy(7, 9);
+
+		}
+		printf("<%d", s);
+
+		while (1) {
+			if (_kbhit()) {
+				select = _getch();
+				if (select == -32) {
+					select = _getch();
+					switch (select) {
+					case 72:
+						if (s != 1) {
+							s--;
+						}
+						break;
+					case 80:
+						if (s != 6) {
+							s++;
+						}
+						break;
+					}
+					break;
+				}
+				else if (select == 'a') {
+					if (s == 1) {
+						if (v.level < 20) {
+							error = 3;
+						}
+						else {
+							v.effectA = 1 - v.effectA;
+						}
+						break;
+
+					}
+					else if (s == 2) {
+						if (v.level < 40) {
+							error = 3;
+						}
+						else {
+							v.effectB = 1 - v.effectB;
+						}
+						break;
+					}
+					else if (s == 3) {
+						if (v.level < 60) {
+							error = 3;
+						}
+						else {
+							v.effectC = 1 - v.effectC;
+						}
+						break;
+
+					}
+					else if (s == 4) {
+						if (v.level < 80) {
+							error = 3;
+						}
+						else {
+							v.effectD = 1 - v.effectD;
+						}
+						break;
+
+					}
+					else if (s == 5) {
+						if (v.level < 100) {
+							error = 3;
+						}
+						else {
+							v.effectFin = 1 - v.effectFin;
+						}
+						break;
+
+					}
+					else if (s == 6) {
+						return v;
+					}
+				}
+				else if (select == 'A') {
+					error = 1;
+					break;
+				}
+				
+				
+
+				else if (select < 0 || select > 126) {
+					error = 2;
+					break;
+				}
+			}
+		}
+	}
+}
+
 void printMap(int place) {
 
 }// 뒷마당, 집, 작업소, 잡화점, 서점, 거래상
@@ -1754,7 +2478,7 @@ void ending() {
 	ending2();
 	printf("\n이야기는 끝났지만 게임은 계속할 수 있습니다.\n아무 키나 눌러 계속");
 	y = _getch();
-	
+
 }
 void ending2() {
 	char y = NULL;
@@ -1778,4 +2502,4 @@ void ending3(int num) {
 	if (num > 2) {
 		printf("~fin~");
 	}
-} 
+}
